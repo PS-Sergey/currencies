@@ -18,6 +18,8 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
 
     @Value("${openexchangerates.app.id}")
     private String appId;
+    @Value("${openexchangerates.base}")
+    private String currency;
 
     private final OpenExchangeRatesFeign openExchangeRatesFeign;
 
@@ -32,15 +34,15 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
     }
 
     @Override
-    public int getKey(String currency) {
-        OpenExchangeRatesModel response = openExchangeRatesFeign.getLatest(appId, currency);
-        Double rate = response.getRates().get(currency);
+    public int compareRate() {
+        LocalDate today = LocalDate.now();
+        Double todayRate = getRateByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(today));
+        Double yesterdayRate = getRateByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(today.minusDays(1)));
+        return Double.compare(todayRate, yesterdayRate);
+    }
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(yesterday);
-        OpenExchangeRatesModel yesterdayResponse = openExchangeRatesFeign.geHistorical(date, appId, currency);
-        Double yesterdayRate = yesterdayResponse.getRates().get(currency);
-        Double result = 1 / rate - 1 / yesterdayRate;
-        return Double.compare(1 / rate, 1 / yesterdayRate);
+    private Double getRateByDate(String date) {
+        OpenExchangeRatesModel response = openExchangeRatesFeign.geHistorical(date, appId, currency);
+        return 1 / response.getRates().get(currency);
     }
 }

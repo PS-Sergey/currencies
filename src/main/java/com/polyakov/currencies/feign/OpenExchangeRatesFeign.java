@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(value = "OpenExchangeRatesFeign", url = "${openexchangerates.url}")
+@FeignClient(value = "openExchangeRatesFeign", url = "${openexchangerates.url}")
 public interface OpenExchangeRatesFeign {
 
     @GetMapping("/currencies.json")
     Map<String, String> getCurrencies();
 
-    @GetMapping("/latest.json")
-    OpenExchangeRatesModel getLatest(
-        @RequestParam("app_id") String appId,
-        @RequestParam("symbols") String symbols);
+//    @GetMapping("/latest.json")
+//    OpenExchangeRatesModel getLatest(
+//        @RequestParam("app_id") String appId,
+//        @RequestParam("symbols") String symbols);
 
     @GetMapping("/historical/{date}.json")
     OpenExchangeRatesModel geHistorical(
