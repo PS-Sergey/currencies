@@ -1,4 +1,4 @@
-package com.polyakov.currencies.model;
+package com.polyakov.currencies.vo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OpenExchangeRatesModel {
+public class OpenExchangeRatesVo {
 
     private String disclaimer;
     private String license;

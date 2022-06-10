@@ -1,17 +1,14 @@
 package com.polyakov.currencies.service;
 
 import com.polyakov.currencies.feign.OpenExchangeRatesFeign;
-import com.polyakov.currencies.model.OpenExchangeRatesModel;
+import com.polyakov.currencies.vo.OpenExchangeRatesVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
@@ -42,7 +39,7 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
     }
 
     private Double getRateByDate(String date) {
-        OpenExchangeRatesModel response = openExchangeRatesFeign.geHistorical(date, appId, currency);
+        OpenExchangeRatesVo response = openExchangeRatesFeign.geHistorical(date, appId, currency);
         return 1 / response.getRates().get(currency);
     }
 }
