@@ -2,6 +2,7 @@ package com.polyakov.currencies.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.polyakov.currencies.exception.GifNotFoundException;
 import com.polyakov.currencies.feign.GiphyFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,9 @@ public class GiphyServiceImpl implements GiphyService{
                                           .build();
         ResponseEntity<byte[]> responseEntity = restTemplate.exchange(requestEntity, byte[].class);
         byte[] gif = responseEntity.getBody();
+        if (gif == null) {
+            throw new GifNotFoundException("Gif not found");
+        }
         return gif;
     }
 
