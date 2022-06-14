@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ class OpenExchangeRatesServiceImplTest {
     @Test
     void whenGetCurrenciesThenReturnCurrencies() {
         Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("RUB", "Russian Ruble");
+        responseMap.put(code, "Russian Ruble");
         Mockito.when(openExchangeRatesFeign.getCurrencies())
             .thenReturn(responseMap);
 
@@ -44,8 +45,9 @@ class OpenExchangeRatesServiceImplTest {
 
     @Test
     void whenCompareRateThenReturnNegative() {
-        String currentDay = "2022-06-14";
-        String oldDay = "2022-06-13";
+        LocalDate now = LocalDate.now();
+        String currentDay = now.toString();
+        String oldDay = now.minusDays(1).toString();
 
         Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(58.579, 1655218798));
@@ -58,8 +60,9 @@ class OpenExchangeRatesServiceImplTest {
 
     @Test
     void whenCompareRateThenReturnPositive() {
-        String currentDay = "2022-06-14";
-        String oldDay = "2022-06-13";
+        LocalDate now = LocalDate.now();
+        String currentDay = now.toString();
+        String oldDay = now.minusDays(1).toString();
 
         Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(57.749, 1655164784));
@@ -72,8 +75,9 @@ class OpenExchangeRatesServiceImplTest {
 
     @Test
     void whenCompareRateThenReturnEquals() {
-        String currentDay = "2022-06-14";
-        String oldDay = "2022-06-13";
+        LocalDate now = LocalDate.now();
+        String currentDay = now.toString();
+        String oldDay = now.minusDays(1).toString();
 
         Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(57.749, 1655164784));
@@ -84,12 +88,12 @@ class OpenExchangeRatesServiceImplTest {
         assertEquals(0, result);
     }
 
-    private OpenExchangeRatesVo createOpenExchangeRatesVo (Double rateValue, int imestamp) {
+    private OpenExchangeRatesVo createOpenExchangeRatesVo (Double rateValue, int timestamp) {
         Map<String, Double> rate = Map.of(code, rateValue);
         OpenExchangeRatesVo rateVo = new OpenExchangeRatesVo();
         rateVo.setDisclaimer("currentDayRateVo");
         rateVo.setLicense("https://openexchangerates.org/license");
-        rateVo.setTimestamp(imestamp);
+        rateVo.setTimestamp(timestamp);
         rateVo.setBase("USD");
         rateVo.setRates(rate);
         return rateVo;

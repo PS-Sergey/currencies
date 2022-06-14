@@ -25,6 +25,8 @@ class CurrencyControllerTest {
     @Value("${giphy.rich}")
     private String rich;
 
+    private String code = "RUB";
+
     @MockBean
     private OpenExchangeRatesService openExchangeRatesService;
 
@@ -37,7 +39,7 @@ class CurrencyControllerTest {
     @Test
     void whenGetCurrenciesThenReturnCurrencies() throws Exception {
         Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("RUB", "Russian Ruble");
+        responseMap.put(code, "Russian Ruble");
         String expectingResult = "{\"RUB\":\"Russian Ruble\"}";
         Mockito.when(openExchangeRatesService.getCurrencies())
             .thenReturn(responseMap);
@@ -48,11 +50,11 @@ class CurrencyControllerTest {
 
     @Test
     void whenGetRateThenReturnStatusOkAndContentType() throws Exception {
-        Mockito.when(openExchangeRatesService.compareRate("RUB"))
+        Mockito.when(openExchangeRatesService.compareRate(code))
             .thenReturn(1);
         Mockito.when(giphyService.getGif(rich))
             .thenReturn(new byte[1]);
-        mockMvc.perform(get("/api/rate"))
+        mockMvc.perform(get("/api/rate/" + code))
             .andDo(print())
             .andExpect(content().contentType(MediaType.IMAGE_GIF))
             .andExpect(status().isOk());
