@@ -18,3 +18,18 @@
     Результатом выполнения должен быть репо на GitHub с инструкцией по запуску
     Nice to Have
     Сборка и запуск Docker контейнера с этим сервисом
+    
+#### Endpoints
+    Список доступных валют: GET /api/currencies
+    Получить gif: GET /api/rate{code}
+    
+#### Запуск
+    jar: 
+    В корне проекта выполнить 
+    java -jar currencies-0.0.1-SNAPSHOT.jar
+    
+    Docker:
+    Для создания образа в корне проекта выполнить 
+    docker build -t currencies .
+    Для запуска созданного контейнера выполнить
+    docker run -p 8080:8080 currencies
