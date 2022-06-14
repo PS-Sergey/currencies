@@ -1,5 +1,6 @@
 package com.polyakov.currencies.service;
 
+import com.polyakov.currencies.exception.CurrencyRateNotFoundException;
 import com.polyakov.currencies.feign.OpenExchangeRatesFeign;
 import com.polyakov.currencies.vo.OpenExchangeRatesVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
@@ -40,6 +43,10 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
 
     private Double getRateByDate(String date) {
         OpenExchangeRatesVo response = openExchangeRatesFeign.geHistorical(date, appId, currency);
+        Double rate = response.getRates().get(currency);
+        if (Objects.isNull(rate)) {
+            throw new CurrencyRateNotFoundException(String.format("Currency rate for %s not found", currency));
+        }
         return 1 / response.getRates().get(currency);
     }
 }
