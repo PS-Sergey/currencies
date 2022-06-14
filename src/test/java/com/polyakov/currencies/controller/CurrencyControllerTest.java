@@ -35,7 +35,7 @@ class CurrencyControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void whenGetCurrenciesThenReturnJsonResult() throws Exception {
+    void whenGetCurrenciesThenReturnCurrencies() throws Exception {
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("RUB", "Russian Ruble");
         String expectingResult = "{\"RUB\":\"Russian Ruble\"}";
