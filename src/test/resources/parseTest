@@ -1,0 +1,18 @@
+{
+    "data": {
+        "images": {
+            "original": {
+                "frames": "12",
+                "hash": "079117afa41551974b14ae761a2739d1",
+                "height": "392",
+                "mp4": "https://media1.giphy.com/media/U1fSTHxkEyu5thH4BG/giphy.mp4?cid=e3901be74ea75afd4051976393e1a65edc01438c669a0c8a&rid=giphy.mp4&ct=g",
+                "mp4_size": "200741",
+                "size": "1297100",
+                "url": "TestUrl",
+                "webp": "https://media1.giphy.com/media/U1fSTHxkEyu5thH4BG/giphy.webp?cid=e3901be74ea75afd4051976393e1a65edc01438c669a0c8a&rid=giphy.webp&ct=g",
+                "webp_size": "283482",
+                "width": "480"
+            }
+        }
+    }
+}
