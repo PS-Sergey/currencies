@@ -1,5 +1,6 @@
 package com.polyakov.currencies.service;
 
+import com.polyakov.currencies.exception.GifNotFoundException;
 import com.polyakov.currencies.feign.GiphyFeign;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -48,5 +49,27 @@ class GiphyServiceImplTest {
             .thenReturn(ResponseEntity.ok().body(gif));
         byte[] result = giphyService.getGif("testTag");
         assertEquals(gif, result);
+    }
+
+    @Test
+    void whenGifUrlReturnNullThrowException() throws IOException {
+        InputStream resource = new ClassPathResource("parseTest").getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+        String giphyFeignResponse = reader
+                .lines()
+                .collect(Collectors.joining("\n"));
+        String gifUrl = "TestUrl";
+        RequestEntity requestEntity = RequestEntity
+                .get(gifUrl)
+                .build();
+
+        Mockito.when(giphyFeign.getGif(anyString(), anyString()))
+                .thenReturn(giphyFeignResponse);
+        Mockito.when(restTemplate.exchange(requestEntity, byte[].class))
+                .thenReturn(ResponseEntity.ok().body(null));
+        Throwable thrown = assertThrows(GifNotFoundException.class, () -> {
+            giphyService.getGif("testTag");
+        });
+        assertNotNull(thrown.getMessage());
     }
 }
