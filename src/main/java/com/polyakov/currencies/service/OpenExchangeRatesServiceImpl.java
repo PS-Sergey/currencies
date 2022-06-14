@@ -15,6 +15,7 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
 
     @Value("${openexchangerates.app.id}")
     private String appId;
+
     @Value("${openexchangerates.base}")
     private String currency;
 
@@ -33,8 +34,8 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
     @Override
     public int compareRate() {
         LocalDate today = LocalDate.now();
-        Double todayRate = getRateByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(today));
-        Double yesterdayRate = getRateByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(today.minusDays(1)));
+        Double todayRate = getRateByDate(today.toString());
+        Double yesterdayRate = getRateByDate(today.minusDays(1).toString());
         return Double.compare(todayRate, yesterdayRate);
     }
 
