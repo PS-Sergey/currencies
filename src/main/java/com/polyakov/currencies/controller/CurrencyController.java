@@ -5,6 +5,7 @@ import com.polyakov.currencies.service.OpenExchangeRatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -37,7 +38,7 @@ public class CurrencyController {
     }
 
     @GetMapping(value = "/rate", produces = MediaType.IMAGE_GIF_VALUE)
-    public byte[] getRate() {
+    public ResponseEntity<byte[]> getRate() {
         String tag = "";
         int counting = openExchangeRatesService.compareRate();
         switch (counting) {
@@ -52,6 +53,9 @@ public class CurrencyController {
                 break;
         }
         byte[] gif = giphyService.getGif(tag);
-        return gif;
+        return ResponseEntity
+                    .ok()
+                    .contentType(MediaType.IMAGE_GIF)
+                    .body(gif);
     }
 }

@@ -12,10 +12,4 @@ public interface GiphyFeign {
             @RequestParam("api_key") String apiKey,
             @RequestParam("tag") String tag
     );
-
-    @GetMapping("/random")
-    String get(
-            @RequestParam("api_key") String apiKey,
-            @RequestParam("tag") String tag
-    );
 }

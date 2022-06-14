@@ -30,18 +30,20 @@ public class GiphyServiceImpl implements GiphyService{
     @Override
     public byte[] getGif(String tag) {
         String json = giphyFeign.getGif(apiKey, tag);
-        String url = getGifUrl(json);
-        RequestEntity requestEntity = RequestEntity.get(url).build();
+        String gifUrl = getGifUrl(json);
+        RequestEntity requestEntity = RequestEntity
+                                          .get(gifUrl)
+                                          .build();
         ResponseEntity<byte[]> responseEntity = restTemplate.exchange(requestEntity, byte[].class);
-        byte[] downloadContent = responseEntity.getBody();
-        return downloadContent;
+        byte[] gif = responseEntity.getBody();
+        return gif;
     }
 
     private String getGifUrl(String json) {
         try {
             return objectMapper.readTree(json).get("data").get("images").get("original").get("url").asText();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error during parsing response from giphy.com");
         }
     }
 }
