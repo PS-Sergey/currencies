@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
@@ -19,7 +18,7 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
     private String appId;
 
     @Value("${openexchangerates.base}")
-    private String currency;
+    private String base;
 
     private final OpenExchangeRatesFeign openExchangeRatesFeign;
 
@@ -34,19 +33,19 @@ public class OpenExchangeRatesServiceImpl implements OpenExchangeRatesService{
     }
 
     @Override
-    public int compareRate() {
+    public int compareRate(String code) {
         LocalDate today = LocalDate.now();
-        Double todayRate = getRateByDate(today.toString());
-        Double yesterdayRate = getRateByDate(today.minusDays(1).toString());
+        Double todayRate = getRateByDate(today.toString(), code);
+        Double yesterdayRate = getRateByDate(today.minusDays(1).toString(), code);
         return Double.compare(todayRate, yesterdayRate);
     }
 
-    private Double getRateByDate(String date) {
-        OpenExchangeRatesVo response = openExchangeRatesFeign.geHistorical(date, appId, currency);
-        Double rate = response.getRates().get(currency);
+    private Double getRateByDate(String date, String code) {
+        OpenExchangeRatesVo response = openExchangeRatesFeign.geHistorical(date, appId, base, code);
+        Double rate = response.getRates().get(code);
         if (Objects.isNull(rate)) {
-            throw new CurrencyRateNotFoundException(String.format("Currency rate for %s not found", currency));
+            throw new CurrencyRateNotFoundException(String.format("Currency rate for %s not found", code));
         }
-        return 1 / response.getRates().get(currency);
+        return 1 / rate;
     }
 }

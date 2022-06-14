@@ -18,5 +18,6 @@ public interface OpenExchangeRatesFeign {
     OpenExchangeRatesVo geHistorical(
         @PathVariable("date") String date,
         @RequestParam("app_id") String appId,
+        @RequestParam("base") String base,
         @RequestParam("symbols") String symbols);
 }

@@ -37,10 +37,10 @@ public class CurrencyController {
         return openExchangeRatesService.getCurrencies();
     }
 
-    @GetMapping(value = "/rate", produces = MediaType.IMAGE_GIF_VALUE)
-    public ResponseEntity<byte[]> getRate() {
+    @GetMapping(value = "/rate/{code}", produces = MediaType.IMAGE_GIF_VALUE)
+    public ResponseEntity<byte[]> getRate(@PathVariable String code) {
         String tag = "";
-        int counting = openExchangeRatesService.compareRate();
+        int counting = openExchangeRatesService.compareRate(code);
         switch (counting) {
             case 1:
                 tag = rich;

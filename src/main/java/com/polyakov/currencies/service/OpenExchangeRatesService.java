@@ -5,5 +5,5 @@ import java.util.Map;
 public interface OpenExchangeRatesService {
 
     Map<String, String> getCurrencies();
-    int compareRate();
+    int compareRate(String code);
 }

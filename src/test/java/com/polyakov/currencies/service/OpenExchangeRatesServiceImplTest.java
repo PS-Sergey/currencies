@@ -21,7 +21,9 @@ class OpenExchangeRatesServiceImplTest {
     private String appId;
 
     @Value("${openexchangerates.base}")
-    private String currency;
+    private String base;
+
+    private String code = "RUB";
 
     @MockBean
     private OpenExchangeRatesFeign openExchangeRatesFeign;
@@ -45,12 +47,12 @@ class OpenExchangeRatesServiceImplTest {
         String currentDay = "2022-06-14";
         String oldDay = "2022-06-13";
 
-        Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, currency))
+        Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(58.579, 1655218798));
-        Mockito.when(openExchangeRatesFeign.geHistorical(oldDay, appId, currency))
+        Mockito.when(openExchangeRatesFeign.geHistorical(oldDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(57.749, 1655164784));
 
-        int result = openExchangeRatesService.compareRate();
+        int result = openExchangeRatesService.compareRate(code);
         assertEquals(-1, result);
     }
 
@@ -59,12 +61,12 @@ class OpenExchangeRatesServiceImplTest {
         String currentDay = "2022-06-14";
         String oldDay = "2022-06-13";
 
-        Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, currency))
+        Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(57.749, 1655164784));
-        Mockito.when(openExchangeRatesFeign.geHistorical(oldDay, appId, currency))
+        Mockito.when(openExchangeRatesFeign.geHistorical(oldDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(58.579, 1655218798));
 
-        int result = openExchangeRatesService.compareRate();
+        int result = openExchangeRatesService.compareRate(code);
         assertEquals(1, result);
     }
 
@@ -73,17 +75,17 @@ class OpenExchangeRatesServiceImplTest {
         String currentDay = "2022-06-14";
         String oldDay = "2022-06-13";
 
-        Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, currency))
+        Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(57.749, 1655164784));
-        Mockito.when(openExchangeRatesFeign.geHistorical(oldDay, appId, currency))
+        Mockito.when(openExchangeRatesFeign.geHistorical(oldDay, appId, base, code))
             .thenReturn(createOpenExchangeRatesVo(57.749, 1655218798));
 
-        int result = openExchangeRatesService.compareRate();
+        int result = openExchangeRatesService.compareRate(code);
         assertEquals(0, result);
     }
 
     private OpenExchangeRatesVo createOpenExchangeRatesVo (Double rateValue, int imestamp) {
-        Map<String, Double> rate = Map.of(currency, rateValue);
+        Map<String, Double> rate = Map.of(code, rateValue);
         OpenExchangeRatesVo rateVo = new OpenExchangeRatesVo();
         rateVo.setDisclaimer("currentDayRateVo");
         rateVo.setLicense("https://openexchangerates.org/license");

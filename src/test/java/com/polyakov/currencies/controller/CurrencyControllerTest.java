@@ -48,7 +48,7 @@ class CurrencyControllerTest {
 
     @Test
     void whenGetRateThenReturnStatusOkAndContentType() throws Exception {
-        Mockito.when(openExchangeRatesService.compareRate())
+        Mockito.when(openExchangeRatesService.compareRate("RUB"))
             .thenReturn(1);
         Mockito.when(giphyService.getGif(rich))
             .thenReturn(new byte[1]);
