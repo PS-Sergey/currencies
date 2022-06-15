@@ -14,18 +14,13 @@ jar {
     }
 }
 
-//task copyJar() {
-//    doLast{
-//        copy {
-//            from './build/libs/currencies-0.0.1-SNAPSHOT.jar'
-//            into "./"
-//        }
-//    }
-//}
-
 task copyJar(type: Copy) {
     from './build/libs/currencies-0.0.1-SNAPSHOT.jar'
     into "./"
+}
+
+build.configure {
+    dependsOn copyJar
 }
 
 configurations {
