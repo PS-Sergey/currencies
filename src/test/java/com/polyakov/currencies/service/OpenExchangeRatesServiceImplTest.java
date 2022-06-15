@@ -1,5 +1,6 @@
 package com.polyakov.currencies.service;
 
+import com.polyakov.currencies.exception.CurrencyRateNotFoundException;
 import com.polyakov.currencies.feign.OpenExchangeRatesFeign;
 import com.polyakov.currencies.vo.OpenExchangeRatesVo;
 import org.junit.jupiter.api.Test;
@@ -88,8 +89,26 @@ class OpenExchangeRatesServiceImplTest {
         assertEquals(0, result);
     }
 
+    @Test
+    void whenRateIsNullThenThrowException() {
+        LocalDate now = LocalDate.now();
+        String currentDay = now.toString();
+        String oldDay = now.minusDays(1).toString();
+
+        Mockito.when(openExchangeRatesFeign.geHistorical(currentDay, appId, base, code))
+            .thenReturn(createOpenExchangeRatesVo(null, 1655164784));
+        Mockito.when(openExchangeRatesFeign.geHistorical(oldDay, appId, base, code))
+            .thenReturn(createOpenExchangeRatesVo(57.749, 1655218798));
+
+        Throwable thrown = assertThrows(CurrencyRateNotFoundException.class, () -> {
+            openExchangeRatesService.compareRate(code);
+        });
+        assertNotNull(thrown.getMessage());
+    }
+
     private OpenExchangeRatesVo createOpenExchangeRatesVo (Double rateValue, int timestamp) {
-        Map<String, Double> rate = Map.of(code, rateValue);
+        Map<String, Double> rate = new HashMap<>();
+        rate.put(code, rateValue);
         OpenExchangeRatesVo rateVo = new OpenExchangeRatesVo();
         rateVo.setDisclaimer("currentDayRateVo");
         rateVo.setLicense("https://openexchangerates.org/license");
