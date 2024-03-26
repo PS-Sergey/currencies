@@ -38,8 +38,10 @@ func Run() {
 	}
 	swagger.Servers = nil
 
-	currencyRateRepository := repository.NewRateRepository(db)
 	currencyRateUpdateChan := make(chan types.UpdateCurrencyRateMsg, 10)
+	defer close(currencyRateUpdateChan)
+
+	currencyRateRepository := repository.NewRateRepository(db)
 	idGenerator := uuidGenerator.NewUUIDGenerator()
 	currencyRateService := service.NewCurrencyRateService(currencyRateRepository, currencyRateUpdateChan, idGenerator)
 	rateClient := cfg.ExchangeRateClient.NewClient()

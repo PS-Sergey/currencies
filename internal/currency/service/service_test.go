@@ -114,6 +114,8 @@ func TestCurrencyRateService_NewCurrencyRate(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
+			defer close(tt.updateCurrencyRateChan)
+
 			s := CurrencyRateService{
 				currencyRateRepository: tt.makeRepository(ctrl),
 				updateCurrencyRateChan: tt.updateCurrencyRateChan,

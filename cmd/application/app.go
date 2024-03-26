@@ -41,6 +41,7 @@ func (a *App) Run() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	a.withMiddleware()
 	a.initServer()
 	go a.runCurrencyRateUpdater(ctx)
 	go a.gracefulShutdown(ctx)
