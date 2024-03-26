@@ -1,0 +1,19 @@
+server:
+  port: :8080
+  readTimeout: 5s
+  writeTimeout: 5s
+  idleTimeout: 15s
+
+db:
+  host: localhost
+  port: 5432
+  dbName: currency
+  user: postgres
+  password: postgres
+  sslMode: disable
+  pgDriver: pgx
+
+exchangeRateClient:
+  baseUrl: https://v6.exchangerate-api.com/v6/
+  timeout: 2s
+  apiKey: d83b9f52d991a26c1cdf56e3

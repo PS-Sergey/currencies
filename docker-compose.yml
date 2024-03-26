@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: docker.io/library/postgres:15.6
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: currency
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks: [ "microservices" ]
+    healthcheck:
+      test: ["CMD", "pg_isready", "--username=postgres"]
+      timeout: 10s
+      retries: 10
+
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./migrations/postgres:/migrations
+    command: [ "-path", "/migrations", "-database", "postgresql://postgres:postgres@postgres:5432/currency?sslmode=disable", "up" ]
+    networks: [ "microservices" ]
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8085:8080"
+    volumes:
+      - "./api/swagger.yml:/swagger.yml"
+    environment:
+      SWAGGER_JSON: /swagger.yml
+    networks: [ "microservices" ]
+
+  app:
+    build: .
+    container_name: currency_service
+    depends_on:
+      - migrate
+    environment:
+      CONFIG_PATH: ./config/dev_config.yml
+    ports:
+      - "8080:8080"
+    networks: [ "microservices" ]
+
+networks:
+  microservices:
+    name: microservices
