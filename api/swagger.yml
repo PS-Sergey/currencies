@@ -1,0 +1,138 @@
+openapi: "3.0.0"
+info:
+  version: "1.0.0"
+  title: Currencies
+servers:
+  - url: http://localhost:8080
+paths:
+  /currency/v1/rate:
+    post:
+      description: Send update currency rate request
+      operationId: newCurrencyRate
+      parameters:
+        - name: pair
+          in: query
+          description: currency pair
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Currency rate id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrencyRateIdResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /currency/v1/rate/{id}:
+    get:
+      description: Get currency rate by id
+      operationId: GetCurrencyRate
+      parameters:
+        - name: id
+          in: path
+          description: Currency rate id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Currency rate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrencyRateResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /currency/v1/rate/{base}/{target}:
+    get:
+      description: Get last currency rate for pair
+      operationId: GetLastCurrencyRate
+      parameters:
+        - name: base
+          in: path
+          description: Base currency
+          required: true
+          schema:
+            $ref: '#/components/schemas/Currency'
+        - name: target
+          in: path
+          description: Target currency
+          required: true
+          schema:
+            $ref: '#/components/schemas/Currency'
+      responses:
+        '200':
+          description: Currency rate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrencyRateResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+components:
+  schemas:
+    Currency:
+      type: string
+      enum: [USD, EUR, MXN]
+    CurrencyRateStatus:
+      type: string
+      enum: [SUCCESS, PENDING, ERROR]
+    CurrencyRateIdResponse:
+      type: object
+      properties:
+        currency_rate_id:
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            path: github.com/google/uuid
+      required:
+        - currency_rate_id
+    CurrencyRateResponse:
+      type: object
+      properties:
+        id:
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            path: github.com/google/uuid
+        rateTime:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/CurrencyRateStatus'
+        rate:
+          type: number
+          format: float
+          nullable: true
+      required:
+        - id
+        - status
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      required:
+        - code
+        - message
