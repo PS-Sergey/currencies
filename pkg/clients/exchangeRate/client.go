@@ -40,7 +40,7 @@ func (c *Client) GetCurrencyRate(ctx context.Context, base string, target string
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return 0, errors.Errorf("get exchange rate for pair %s/%s", base, target)
+		return 0, errors.Errorf("get exchange rate for pair %s/%s, status code: %s", base, target, resp.StatusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)

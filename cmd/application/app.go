@@ -61,9 +61,7 @@ func (a *App) runCurrencyRateUpdater(ctx context.Context) {
 	for {
 		select {
 		case msg := <-a.currencyRateUpdateChan:
-			ctx, cancel := context.WithCancel(ctx)
 			a.currencyRateUpdater.UpdateCurrencyRate(ctx, msg)
-			cancel()
 		case <-ctx.Done():
 			return
 		}
