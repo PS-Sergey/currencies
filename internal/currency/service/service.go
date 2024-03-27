@@ -33,14 +33,14 @@ func (s *CurrencyRateService) NewCurrencyRate(ctx context.Context, base types.Cu
 		return uuid.UUID{}, errors.Wrap(err, "generate UUID for new currency rate")
 	}
 
-	newRate := types.CurrencyRate{
+	newCurrencyRate := types.CurrencyRate{
 		Id:     currencyRateId,
 		Status: types.PENDING,
 		Base:   base,
 		Target: target,
 	}
 
-	err = s.currencyRateRepository.SaveCurrencyRate(ctx, newRate)
+	err = s.currencyRateRepository.SaveCurrencyRate(ctx, newCurrencyRate)
 	if err != nil {
 		return uuid.UUID{}, errors.Wrap(err, "save new currency rate")
 	}
@@ -57,19 +57,19 @@ func (s *CurrencyRateService) NewCurrencyRate(ctx context.Context, base types.Cu
 }
 
 func (s *CurrencyRateService) GetCurrencyRateById(ctx context.Context, currencyRateId uuid.UUID) (types.CurrencyRate, error) {
-	rate, err := s.currencyRateRepository.GetCurrencyRateById(ctx, currencyRateId)
+	currencyRate, err := s.currencyRateRepository.GetCurrencyRateById(ctx, currencyRateId)
 	if err != nil {
 		return types.CurrencyRate{}, errors.Wrap(err, "get currency rate from repository")
 	}
 
-	return rate, nil
+	return currencyRate, nil
 }
 
 func (s *CurrencyRateService) GetLastCurrencyRate(ctx context.Context, base types.Currency, target types.Currency) (types.CurrencyRate, error) {
-	rate, err := s.currencyRateRepository.GetLastCurrencyRate(ctx, base, target)
+	currencyRate, err := s.currencyRateRepository.GetLastCurrencyRate(ctx, base, target)
 	if err != nil {
 		return types.CurrencyRate{}, errors.Wrap(err, "get last currency rate from repository")
 	}
 
-	return rate, nil
+	return currencyRate, nil
 }

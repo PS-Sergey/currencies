@@ -1,10 +1,11 @@
 package application
 
 import (
-	"go.uber.org/zap"
 	"net/http"
 	"runtime/debug"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 func (a *App) withMiddleware() {

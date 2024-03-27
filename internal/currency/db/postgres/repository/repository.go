@@ -47,9 +47,9 @@ func (r *RateRepository) GetCurrencyRateById(ctx context.Context, id uuid.UUID) 
 	err = r.db.GetContext(ctx, &currencyRate, getCurrencyRateBindQuery, getCurrencyRateArgs...)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return types.CurrencyRate{}, types.ErrCurrencyRateNotFound
+			return types.CurrencyRate{}, errors.Wrapf(types.ErrCurrencyRateNotFound, "currency rate id: %s", id)
 		}
-		return types.CurrencyRate{}, errors.Wrap(err, "query get currency rate by id")
+		return types.CurrencyRate{}, errors.Wrapf(err, "query get currency rate by id: %s", id)
 	}
 
 	return mappers.DBCurrencyRateToDomain(currencyRate)
@@ -77,15 +77,15 @@ func (r *RateRepository) GetLastCurrencyRate(ctx context.Context, current types.
 	return mappers.DBCurrencyRateToDomain(currencyRate)
 }
 
-func (r *RateRepository) UpdateCurrencyRate(ctx context.Context, rate types.CurrencyRate) error {
-	dbCurrencyRate, err := mappers.DomainCurrencyRateToDB(rate)
+func (r *RateRepository) UpdateCurrencyRate(ctx context.Context, currencyRate types.CurrencyRate) error {
+	dbCurrencyRate, err := mappers.DomainCurrencyRateToDB(currencyRate)
 	if err != nil {
 		return errors.Wrap(err, "mapping domain currency rate to DB")
 	}
 
 	_, err = r.db.NamedExecContext(ctx, updateCurrencyRateQuery, dbCurrencyRate)
 	if err != nil {
-		return errors.Wrap(err, "update currency rate")
+		return errors.Wrapf(err, "update currency rate with id: %s", currencyRate.Id)
 	}
 
 	return nil
