@@ -32,6 +32,7 @@ func Run() {
 	if err != nil {
 		logger.Fatal("fail to get DB connection", zap.Error(err))
 	}
+	defer db.Close()
 
 	swagger, err := api.GetSwagger()
 	if err != nil {
