@@ -55,11 +55,11 @@ func (r *RateRepository) GetCurrencyRateById(ctx context.Context, id uuid.UUID) 
 	return mappers.DBCurrencyRateToDomain(currencyRate)
 }
 
-func (r *RateRepository) GetLastCurrencyRate(ctx context.Context, current types.Currency, target types.Currency) (types.CurrencyRate, error) {
+func (r *RateRepository) GetLastCurrencyRate(ctx context.Context, base types.Currency, target types.Currency) (types.CurrencyRate, error) {
 	var currencyRate dto.CurrencyRate
 
 	getLastCurrencyRateBindQuery, getLastCurrencyRateArgs, err := r.db.BindNamed(getLastCurrencyRateQuery, map[string]any{
-		"base":   current,
+		"base":   base,
 		"target": target,
 	})
 	if err != nil {

@@ -11,6 +11,6 @@ import (
 type RateRepository interface {
 	SaveCurrencyRate(ctx context.Context, currencyRate types.CurrencyRate) error
 	GetCurrencyRateById(ctx context.Context, id uuid.UUID) (types.CurrencyRate, error)
-	GetLastCurrencyRate(ctx context.Context, current types.Currency, target types.Currency) (types.CurrencyRate, error)
+	GetLastCurrencyRate(ctx context.Context, base types.Currency, target types.Currency) (types.CurrencyRate, error)
 	UpdateCurrencyRate(ctx context.Context, rate types.CurrencyRate) error
 }

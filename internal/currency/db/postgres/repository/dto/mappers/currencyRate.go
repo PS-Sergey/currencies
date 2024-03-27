@@ -13,9 +13,9 @@ func DomainCurrencyRateToDB(domainCurrencyRate types.CurrencyRate) (dto.Currency
 		return dto.CurrencyRate{}, errors.Wrap(err, "mapping currency rate status from domain to DB")
 	}
 
-	current, err := domainCurrencyToDB(domainCurrencyRate.Base)
+	base, err := domainCurrencyToDB(domainCurrencyRate.Base)
 	if err != nil {
-		return dto.CurrencyRate{}, errors.Wrap(err, "mapping current currency from domain to DB")
+		return dto.CurrencyRate{}, errors.Wrap(err, "mapping base currency from domain to DB")
 	}
 
 	target, err := domainCurrencyToDB(domainCurrencyRate.Target)
@@ -27,7 +27,7 @@ func DomainCurrencyRateToDB(domainCurrencyRate types.CurrencyRate) (dto.Currency
 		Id:       domainCurrencyRate.Id,
 		RateTime: domainCurrencyRate.RateTime,
 		Status:   status,
-		Base:     current,
+		Base:     base,
 		Target:   target,
 		Rate:     domainCurrencyRate.Rate,
 	}, nil
@@ -65,9 +65,9 @@ func DBCurrencyRateToDomain(dbCurrencyRate dto.CurrencyRate) (types.CurrencyRate
 		return types.CurrencyRate{}, errors.Wrap(err, "mapping currency rate status from domain to DB")
 	}
 
-	current, err := dbCurrencyToDomain(dbCurrencyRate.Base)
+	base, err := dbCurrencyToDomain(dbCurrencyRate.Base)
 	if err != nil {
-		return types.CurrencyRate{}, errors.Wrap(err, "mapping current currency from domain to DB")
+		return types.CurrencyRate{}, errors.Wrap(err, "mapping base currency from domain to DB")
 	}
 
 	target, err := dbCurrencyToDomain(dbCurrencyRate.Target)
@@ -79,7 +79,7 @@ func DBCurrencyRateToDomain(dbCurrencyRate dto.CurrencyRate) (types.CurrencyRate
 		Id:       dbCurrencyRate.Id,
 		RateTime: dbCurrencyRate.RateTime,
 		Status:   status,
-		Base:     current,
+		Base:     base,
 		Target:   target,
 		Rate:     dbCurrencyRate.Rate,
 	}, nil

@@ -52,32 +52,32 @@ func (mr *MockRateRepositoryMockRecorder) GetCurrencyRateById(ctx, id interface{
 }
 
 // GetLastCurrencyRate mocks base method.
-func (m *MockRateRepository) GetLastCurrencyRate(ctx context.Context, current, target types.Currency) (types.CurrencyRate, error) {
+func (m *MockRateRepository) GetLastCurrencyRate(ctx context.Context, base, target types.Currency) (types.CurrencyRate, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLastCurrencyRate", ctx, current, target)
+	ret := m.ctrl.Call(m, "GetLastCurrencyRate", ctx, base, target)
 	ret0, _ := ret[0].(types.CurrencyRate)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetLastCurrencyRate indicates an expected call of GetLastCurrencyRate.
-func (mr *MockRateRepositoryMockRecorder) GetLastCurrencyRate(ctx, current, target interface{}) *gomock.Call {
+func (mr *MockRateRepositoryMockRecorder) GetLastCurrencyRate(ctx, base, target interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLastCurrencyRate", reflect.TypeOf((*MockRateRepository)(nil).GetLastCurrencyRate), ctx, current, target)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLastCurrencyRate", reflect.TypeOf((*MockRateRepository)(nil).GetLastCurrencyRate), ctx, base, target)
 }
 
 // SaveCurrencyRate mocks base method.
-func (m *MockRateRepository) SaveCurrencyRate(ctx context.Context, rate types.CurrencyRate) error {
+func (m *MockRateRepository) SaveCurrencyRate(ctx context.Context, currencyRate types.CurrencyRate) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SaveCurrencyRate", ctx, rate)
+	ret := m.ctrl.Call(m, "SaveCurrencyRate", ctx, currencyRate)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SaveCurrencyRate indicates an expected call of SaveCurrencyRate.
-func (mr *MockRateRepositoryMockRecorder) SaveCurrencyRate(ctx, rate interface{}) *gomock.Call {
+func (mr *MockRateRepositoryMockRecorder) SaveCurrencyRate(ctx, currencyRate interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCurrencyRate", reflect.TypeOf((*MockRateRepository)(nil).SaveCurrencyRate), ctx, rate)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveCurrencyRate", reflect.TypeOf((*MockRateRepository)(nil).SaveCurrencyRate), ctx, currencyRate)
 }
 
 // UpdateCurrencyRate mocks base method.

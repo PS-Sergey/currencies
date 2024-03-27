@@ -36,16 +36,16 @@ func (m *MockExchangeRateClient) EXPECT() *MockExchangeRateClientMockRecorder {
 }
 
 // GetCurrencyRate mocks base method.
-func (m *MockExchangeRateClient) GetCurrencyRate(ctx context.Context, current, target types.Currency) (float32, error) {
+func (m *MockExchangeRateClient) GetCurrencyRate(ctx context.Context, base, target types.Currency) (float32, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCurrencyRate", ctx, current, target)
+	ret := m.ctrl.Call(m, "GetCurrencyRate", ctx, base, target)
 	ret0, _ := ret[0].(float32)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetCurrencyRate indicates an expected call of GetCurrencyRate.
-func (mr *MockExchangeRateClientMockRecorder) GetCurrencyRate(ctx, current, target interface{}) *gomock.Call {
+func (mr *MockExchangeRateClientMockRecorder) GetCurrencyRate(ctx, base, target interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCurrencyRate", reflect.TypeOf((*MockExchangeRateClient)(nil).GetCurrencyRate), ctx, current, target)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCurrencyRate", reflect.TypeOf((*MockExchangeRateClient)(nil).GetCurrencyRate), ctx, base, target)
 }
