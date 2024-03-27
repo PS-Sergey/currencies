@@ -90,7 +90,3 @@ func (r *RateRepository) UpdateCurrencyRate(ctx context.Context, currencyRate ty
 
 	return nil
 }
-
-func (r *RateRepository) WithTx(ctx context.Context) {
-
-}
