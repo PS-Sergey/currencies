@@ -4,12 +4,13 @@ import (
 	"context"
 	"currencies/internal/currency"
 	"currencies/internal/currency/types"
-	"errors"
-	"go.uber.org/zap"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 type App struct {
@@ -44,17 +45,18 @@ func (a *App) Run() {
 	a.withMiddleware()
 	a.initServer()
 	go a.runCurrencyRateUpdater(ctx)
-	go a.gracefulShutdown(ctx)
-
+	go func() {
+		if err := a.srv.ListenAndServe(); err != nil {
+			if errors.Is(err, http.ErrServerClosed) {
+				a.logger.Info("Server stopped")
+				return
+			}
+			a.logger.Error("Server error", zap.Error(err))
+		}
+	}()
 	a.logger.Info("server starting", zap.String("port", a.cfg.Port))
 
-	if err := a.srv.ListenAndServe(); err != nil {
-		if errors.Is(err, http.ErrServerClosed) {
-			a.logger.Info("Server stopped")
-			return
-		}
-		a.logger.Error("Server error", zap.Error(err))
-	}
+	a.gracefulShutdown(ctx)
 }
 
 func (a *App) runCurrencyRateUpdater(ctx context.Context) {
