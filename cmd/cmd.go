@@ -20,6 +20,7 @@ import (
 )
 
 const (
+	configPathEnv     = "CONFIG_PATH"
 	defaultConfigPath = "./config/config.yml"
 )
 
@@ -29,12 +30,12 @@ func Run() {
 
 	db, err := cfg.DB.NewClient()
 	if err != nil {
-		logger.Fatal("Fail to get DB connection", zap.Error(err))
+		logger.Fatal("fail to get DB connection", zap.Error(err))
 	}
 
 	swagger, err := api.GetSwagger()
 	if err != nil {
-		logger.Fatal("Error loading swagger spec", zap.Error(err))
+		logger.Fatal("error loading swagger spec", zap.Error(err))
 	}
 	swagger.Servers = nil
 
@@ -59,7 +60,7 @@ func Run() {
 }
 
 func mustLoadConfig() *config.Config {
-	configPath := os.Getenv("CONFIG_PATH")
+	configPath := os.Getenv(configPathEnv)
 	if configPath == "" {
 		configPath = defaultConfigPath
 	}
