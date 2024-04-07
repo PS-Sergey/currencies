@@ -17,3 +17,8 @@ exchangeRateClient:
   baseUrl: https://v6.exchangerate-api.com/v6/
   timeout: 2s
   apiKey: d83b9f52d991a26c1cdf56e3
+
+tracer:
+  host: localhost:4318
+  ratio: 1
+  serviceName: currencies

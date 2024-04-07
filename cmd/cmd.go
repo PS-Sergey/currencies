@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"currencies/api"
 	"currencies/cmd/application"
 	"currencies/config"
@@ -25,8 +26,16 @@ const (
 )
 
 func Run() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	cfg := mustLoadConfig()
 	logger := zap.Must(zap.NewProduction())
+
+	err := cfg.Tracer.SetTracer(ctx)
+	if err != nil {
+		logger.Fatal("fail to set tracer", zap.Error(err))
+	}
 
 	db, err := cfg.DB.NewClient()
 	if err != nil {
@@ -57,7 +66,7 @@ func Run() {
 	handler := api.HandlerFromMux(currencyRateHandler, r)
 
 	app := application.NewApp(cfg.Server, logger, currencyRateUpdateChan, currencyRateUpdater, handler)
-	app.Run()
+	app.Run(ctx)
 }
 
 func mustLoadConfig() *config.Config {
