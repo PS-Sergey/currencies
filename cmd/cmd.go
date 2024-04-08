@@ -17,6 +17,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ilyakaznacheev/cleanenv"
 	middleware "github.com/oapi-codegen/nethttp-middleware"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux"
 	"go.uber.org/zap"
 )
 
@@ -63,6 +64,7 @@ func Run() {
 
 	r := mux.NewRouter()
 	r.Use(middleware.OapiRequestValidator(swagger))
+	r.Use(otelmux.Middleware(cfg.Tracer.ServiceName))
 	handler := api.HandlerFromMux(currencyRateHandler, r)
 
 	app := application.NewApp(cfg.Server, logger, currencyRateUpdateChan, currencyRateUpdater, handler)

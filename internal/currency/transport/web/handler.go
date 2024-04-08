@@ -3,7 +3,6 @@ package web
 import (
 	"currencies/api"
 	"currencies/internal/currency"
-	"currencies/internal/currency/tech"
 	"currencies/internal/currency/types"
 	"currencies/internal/currency/types/mappers"
 	"encoding/json"
@@ -48,9 +47,6 @@ func (h *RateHandler) NewCurrencyRate(w http.ResponseWriter, r *http.Request, pa
 }
 
 func (h *RateHandler) GetLastCurrencyRate(w http.ResponseWriter, r *http.Request, base api.Currency, target api.Currency) {
-	ctx, span := tech.StartSpan(r.Context(), "get last currency rate")
-	defer span.End()
-
 	baseCurrency, err := mappers.ApiCurrencyToDomain(base)
 	if err != nil {
 		h.logErrAndSend(w, err)
@@ -63,7 +59,7 @@ func (h *RateHandler) GetLastCurrencyRate(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	currencyRate, err := h.currencyRateService.GetLastCurrencyRate(ctx, baseCurrency, targetCurrency)
+	currencyRate, err := h.currencyRateService.GetLastCurrencyRate(r.Context(), baseCurrency, targetCurrency)
 	if err != nil {
 		h.logErrAndSend(w, err)
 		return
